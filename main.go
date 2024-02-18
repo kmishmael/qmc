@@ -4,32 +4,117 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"qmc/utils"
+	"qmc/tables"
 )
+
+
+func countZeros(binary string) int {
+	count := 0
+	for _, bit := range binary {
+		if bit == '0' {
+			count++
+		}
+	}
+	return count
+}
+
+func hasCommonBinaryValue(num1, num2 string) (bool, string) {
+	diffCount := 0
+	combinedValue := ""
+	for i := 0; i < len(num1); i++ {
+		if num1[i] != num2[i] {
+			diffCount++
+			if diffCount > 1 {
+				return false, ""
+			}
+			combinedValue += "x"
+		} else {
+			combinedValue += string(num1[i])
+		}
+	}
+	return diffCount == 1, combinedValue
+}
 
 func main() {
 	maxterms := []int{0, 1, 3, 4, 5, 6}
 
-	var m int = max(maxterms)
-
+	m := utils.Max(maxterms)
 	radix := int(math.Log2(float64(m))) + 1
 
-	bin_terms := make([]string, len(maxterms))
-
+	binTerms := make([]string, len(maxterms))
 	for i, term := range maxterms {
-		bin_terms[i] = strconv.FormatInt(int64(term), 2)
-		for len(bin_terms[i]) < radix {
-			bin_terms[i] = "0" + bin_terms[i]
+		binTerms[i] = strconv.FormatInt(int64(term), 2)
+		for len(binTerms[i]) < radix {
+			binTerms[i] = "0" + binTerms[i]
 		}
 	}
-	fmt.Println("Hello")
+
+	groups := make([][]map[string]interface{}, 0)
+
+	for i := radix; i >= 0; i-- {
+		group := make([]map[string]interface{}, 0)
+		for _, term := range binTerms {
+			c := countZeros(term)
+			if c == i {
+				group = append(group, map[string]interface{}{"key": []int{toInt(term)}, "value": term, "matched": false})
+			}
+		}
+		if len(group) > 0 {
+			groups = append(groups, group)
+		}
+	}
+
+	primeImplicants := make([]string, 0)
+	g := make([][]map[string]interface{}, len(groups))
+	copy(g, groups)
+
+	reachedMinReduction := false
+	for !reachedMinReduction {
+		newGroups := make([][]map[string]interface{}, 0)
+		didMatch := false
+		for i := 0; i < len(g)-1; i++ {
+			group1 := g[i]
+			group2 := g[i+1]
+			grp := make([]map[string]interface{}, 0)
+
+			for _, term1 := range group1 {
+				for _, term2 := range group2 {
+					isCommon, newBinary := hasCommonBinaryValue(term1["value"].(string), term2["value"].(string))
+					if isCommon {
+						term1["matched"] = true
+						term2["matched"] = true
+						didMatch = true
+						newGroup := map[string]interface{}{"key": append(term1["key"].([]int), term2["key"].([]int)...), "value": newBinary, "matched": false}
+						grp = append(grp, newGroup)
+					}
+				}
+			}
+			newGroups = append(newGroups, grp)
+		}
+		if !didMatch {
+			break
+		}
+		for _, grp := range g {
+			for _, t := range grp {
+				if !t["matched"].(bool) {
+					primeImplicants = append(primeImplicants, t["value"].(string))
+				}
+			}
+		}
+		fmt.Println(len(newGroups), newGroups)
+		g = newGroups
+		tables.BuildTable(g)
+	}
+
+	fmt.Println("Final Values")
+	fmt.Println("Prime implicants", primeImplicants)
+	fmt.Println(g)
+	//tables.BuildTable(g)
+
 }
 
-func max(terms []int) int {
-	var m int = terms[0]
-	for _, term := range terms {
-		if term > m {
-			m = term
-		}
-	}
-	return m
+func toInt(binary string) int {
+	val, _ := strconv.ParseInt(binary, 2, 64)
+	return int(val)
 }
