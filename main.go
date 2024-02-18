@@ -3,11 +3,10 @@ package main
 import (
 	"fmt"
 	"math"
-	"strconv"
-	"qmc/utils"
 	"qmc/tables"
+	"qmc/utils"
+	"strconv"
 )
-
 
 func countZeros(binary string) int {
 	count := 0
@@ -70,6 +69,7 @@ func main() {
 	copy(g, groups)
 
 	reachedMinReduction := false
+	r := 1
 	for !reachedMinReduction {
 		newGroups := make([][]map[string]interface{}, 0)
 		didMatch := false
@@ -104,13 +104,18 @@ func main() {
 		}
 		fmt.Println(len(newGroups), newGroups)
 		g = newGroups
+		fmt.Println("")
+		fmt.Printf("Reduction %d\n", r)
 		tables.BuildTable(g)
+		r++
+
 	}
 
-	fmt.Println("Final Values")
-	fmt.Println("Prime implicants", primeImplicants)
-	fmt.Println(g)
-	//tables.BuildTable(g)
+	fmt.Println("")
+	fmt.Println("Prime implicants: ")
+	for _, implicant := range primeImplicants {
+		fmt.Printf("=> %s\n", implicant)
+	}
 
 }
 
