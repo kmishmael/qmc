@@ -1,5 +1,10 @@
 package utils
 
+import (
+	"fmt"
+	"strings"
+)
+
 func Max(slice []int) int {
 	max := slice[0]
 	for _, v := range slice {
@@ -10,7 +15,7 @@ func Max(slice []int) int {
 	return max
 }
 
-func ExtractUniqueValues(array [][]map[string]interface{}) []string{
+func ExtractUniqueValues(array [][]map[string]interface{}) []string {
 
 	uniqueValues := make(map[string]bool)
 	var values []string
@@ -25,4 +30,14 @@ func ExtractUniqueValues(array [][]map[string]interface{}) []string{
 		}
 	}
 	return values
+}
+
+func SliceToSpread(slice []int) string {
+	strSlice := make([]string, len(slice))
+	for i, v := range slice {
+		strSlice[i] = fmt.Sprintf("%d", v)
+	}
+
+	result := strings.Join(strSlice, ", ")
+	return result
 }

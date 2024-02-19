@@ -4,39 +4,46 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-
+	"qmc/utils"
 	"github.com/olekukonko/tablewriter"
 )
 
+
 func BuildTable(data [][]map[string]interface{}) {
 
-	// Create a new table
 	table := tablewriter.NewWriter(os.Stdout)
 
-	// Extract headers from the first map
 	headers := []string{"key", "value", "matched"}
 
-	// Set the table header
 	table.SetHeader(headers)
 
-	// Append data to the table
 	for _, innerSlice := range data {
 		for _, row := range innerSlice {
 			var rowValues []string
 			for _, header := range headers {
-				// Convert interface{} to string based on the type
 				val := row[header]
 				switch v := val.(type) {
 				case int:
 					rowValues = append(rowValues, strconv.Itoa(v))
 				case string:
 					rowValues = append(rowValues, v)
+				case []int:
+					rowValues = append(rowValues, utils.SliceToSpread(v))
 				default:
-					// Handle other types if needed
 					rowValues = append(rowValues, fmt.Sprintf("%v", v))
 				}
 			}
-			table.Append(rowValues)
+
+			if matched, ok := row["matched"].(bool); ok && !matched {
+				colors := make([]tablewriter.Colors, len(rowValues))
+				for i := range colors {
+					colors[i] = tablewriter.Colors{tablewriter.Normal, tablewriter.FgYellowColor}
+				}
+
+				table.Rich(rowValues, colors)
+			} else {
+				table.Append(rowValues)
+			}
 		}
 	}
 
@@ -50,5 +57,4 @@ func BuildTable(data [][]map[string]interface{}) {
 
 	// Render the table
 	table.Render()
-
 }
