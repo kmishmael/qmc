@@ -19,10 +19,7 @@ func BuildTable(data [][]map[string]interface{}) {
 	table := tablewriter.NewWriter(os.Stdout)
 
 	// Extract headers from the first map
-	var headers []string
-	for key := range data[0][0] {
-		headers = append(headers, key)
-	}
+	headers := []string{"key", "value", "matched"}
 
 	// Set the table header
 	table.SetHeader(headers)

@@ -66,10 +66,13 @@ func main() {
 
 	primeImplicants := make([]string, 0)
 	g := make([][]map[string]interface{}, len(groups))
-	copy(g, groups)
+	for i, group := range groups {
+		g[i] = make([]map[string]interface{}, len(group))
+		copy(g[i], group)
+	}
 
 	reachedMinReduction := false
-	r := 1
+	r := 0
 	for !reachedMinReduction {
 		newGroups := make([][]map[string]interface{}, 0)
 		didMatch := false
@@ -78,12 +81,12 @@ func main() {
 			group2 := g[i+1]
 			grp := make([]map[string]interface{}, 0)
 
-			for _, term1 := range group1 {
-				for _, term2 := range group2 {
+			for m, term1 := range group1 {
+				for n, term2 := range group2 {
 					isCommon, newBinary := hasCommonBinaryValue(term1["value"].(string), term2["value"].(string))
 					if isCommon {
-						term1["matched"] = true
-						term2["matched"] = true
+						g[i][m]["matched"] = true
+						g[i+1][n]["matched"] = true
 						didMatch = true
 						newGroup := map[string]interface{}{"key": append(term1["key"].([]int), term2["key"].([]int)...), "value": newBinary, "matched": false}
 						grp = append(grp, newGroup)
@@ -102,20 +105,26 @@ func main() {
 				}
 			}
 		}
-		fmt.Println(len(newGroups), newGroups)
+		if (r == 0) {
+			fmt.Printf("\nINITIAL BOOLEAN TABLE\n")
+			tables.BuildTable(g)
+		} else {
+			fmt.Printf("\nREDUCTION %d\n", r)
+			tables.BuildTable(g)
+		}
 		g = newGroups
-		fmt.Println("")
-		fmt.Printf("Reduction %d\n", r)
-		tables.BuildTable(g)
 		r++
 
 	}
+	fmt.Printf("\nFINAL REDUCTION %d\n", r)
+	tables.BuildTable(g)
 
 	fmt.Println("")
 	fmt.Println("Prime implicants: ")
 	for _, implicant := range primeImplicants {
 		fmt.Printf("=> %s\n", implicant)
 	}
+	fmt.Println("")
 
 }
 
