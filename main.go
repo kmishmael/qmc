@@ -121,7 +121,9 @@ func main() {
 
 	fmt.Println("")
 	fmt.Println("Prime implicants: ")
-	for _, implicant := range primeImplicants {
+	implicants := primeImplicants
+	implicants = append(implicants, utils.ExtractUniqueValues(g)...)
+	for _, implicant := range implicants {
 		fmt.Printf("=> %s\n", implicant)
 	}
 	fmt.Println("")
