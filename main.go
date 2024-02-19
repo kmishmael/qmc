@@ -6,6 +6,7 @@ import (
 	"qmc/tables"
 	"qmc/utils"
 	"strconv"
+	"strings"
 )
 
 func countZeros(binary string) int {
@@ -36,7 +37,27 @@ func hasCommonBinaryValue(num1, num2 string) (bool, string) {
 }
 
 func main() {
-	maxterms := []int{0, 1, 3, 4, 5, 6}
+
+	var input string
+
+	fmt.Println("Enter maxterms separated by commas:")
+
+	fmt.Print("Enter maxterms: ")
+	fmt.Scanln(&input)
+
+	input = strings.TrimSpace(input)
+	termsSlice := strings.Split(input, ",")
+
+	maxterms := make([]int, len(termsSlice))
+	for i, termStr := range termsSlice {
+		term, err := strconv.Atoi(strings.TrimSpace(termStr))
+		if err != nil {
+			fmt.Printf("Error converting %s to integer: %v\n", termStr, err)
+			return
+		}
+		maxterms[i] = term
+	}
+
 
 	m := utils.Max(maxterms)
 	radix := int(math.Log2(float64(m))) + 1
@@ -105,7 +126,7 @@ func main() {
 				}
 			}
 		}
-		if (r == 0) {
+		if r == 0 {
 			fmt.Printf("\nINITIAL BOOLEAN TABLE\n")
 			tables.BuildTable(g)
 		} else {
@@ -124,7 +145,7 @@ func main() {
 	implicants := primeImplicants
 	implicants = append(implicants, utils.ExtractUniqueValues(g)...)
 	for _, implicant := range implicants {
-		fmt.Printf("=> %s\n", implicant)
+		fmt.Printf("=> \x1b[34m%s\x1b[0m\n", implicant)
 	}
 	fmt.Println("")
 
