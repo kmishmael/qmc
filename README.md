@@ -102,9 +102,7 @@ We systematically check each binary equivalent with members in neigbour index gr
 +------------+-----------+---------+
 ```
 
-### d.
-
-At this second reduction, we should note two things:
+### d. At this second reduction, we should note two things:
 
 1. Not all the minterm groups in the 1st reduction could form new bigger pairs ie. 0x1, 1x0
 2. In the 2nd reduction table only one term exist i.e x0x and we cannot reduce further.
