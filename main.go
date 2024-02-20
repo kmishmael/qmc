@@ -40,9 +40,8 @@ func main() {
 
 	var input string
 
-	fmt.Println("Enter maxterms separated by commas:")
+	fmt.Print("Enter maxterms separated by commas: ")
 
-	fmt.Print("Enter maxterms: ")
 	fmt.Scanln(&input)
 
 	input = strings.TrimSpace(input)

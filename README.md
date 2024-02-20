@@ -116,7 +116,49 @@ prime implicants for our simplified expression.
 
 ## How it works
 
-![alt text](image.png)
+
+```bash
+kmishmael@KIBET-PC:~$ go run main.go
+Enter maxterms separated by commas: 0,1,3,4,5,6
+
+INITIAL BOOLEAN TABLE
+|-----|-------|---------|
+| KEY | VALUE | MATCHED |
+|-----|-------|---------|
+| 0   | 000   | true    |
+| 1   | 001   | true    |
+| 4   | 100   | true    |
+| 3   | 011   | true    |
+| 5   | 101   | true    |
+| 6   | 110   | true    |
+|-----|-------|---------|
+
+REDUCTION 1
+|------|-------|---------|
+| KEY  | VALUE | MATCHED |
+|------|-------|---------|
+| 0, 1 | 00x   | true    |
+| 0, 4 | x00   | true    |
+| 1, 3 | 0x1   | false   |
+| 1, 5 | x01   | true    |
+| 4, 5 | 10x   | true    |
+| 4, 6 | 1x0   | false   |
+|------|-------|---------|
+
+FINAL REDUCTION 2
+|------------|-------|---------|
+|    KEY     | VALUE | MATCHED |
+|------------|-------|---------|
+| 0, 1, 4, 5 | x0x   | false   |
+| 0, 4, 1, 5 | x0x   | false   |
+|------------|-------|---------|
+
+Prime implicants:
+=> 0x1
+=> 1x0
+=> x0x
+
+```
 
 Since QMC methods handles minterms and maxterms similary, it can there work for both terms. The interpretation of the
 prime implicants, which would be different for both scenarios, it left up to the user.
