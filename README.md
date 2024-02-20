@@ -15,7 +15,9 @@ Let's look at an example
 
 Consider simplifying the expression
 
+```
 F = Σ m(0,1,3,4,5,6)
+```
 
 ## Step 1: expand our minterms to binary
 
@@ -57,4 +59,26 @@ this step requires a bit of explanation:
 |       |  5      | 101    |
 |       |  6      | 110    |
 +-------+---------+--------+
+```
+
+### b. Reduction begins by looking for commonality between terms in neigbour index groups. Commonality sought is a shift by only logic 1.
+
+We systematically check each binary equivalent with members in neigbour index group and **_tag & pair_** those that shift by only 1 value.
+
+```
+
++-------+---------+--------+---------+      +------------------------+
+|               START                |      |     1ST REDUCTION      |
++-------+---------+--------+---------+      +------------+-----------+
+| index | minterm | binary |  check  |      |  minterm   |   binary  |
++-------+---------+--------+----+----+      +------------+-----------+
+| Grp 0 |  0      | 000    | ✓✓ |    |      |    0, 1    |   00x     |
++------------------------------------+      |    0, 4    |   x00     |
+| Grp 1 |  1      | 001    | ✓  | ✓✓ |      +------------------------+
+|       |  4      | 100    | ✓  | ✓✓ |      |    1, 3    |   0x1     |
++------------------------------------+      |    1, 5    |   x01     |
+| Grp 2 |  3      | 011    |    | ✓  |      |    4, 5    |   10x     |
+|       |  5      | 101    |    | ✓✓ |      |    4, 6    |   1x0     |
+|       |  6      | 110    |    | ✓  |      +------------+-----------+
++-------+---------+--------+----+----+
 ```
