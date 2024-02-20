@@ -83,3 +83,40 @@ We systematically check each binary equivalent with members in neigbour index gr
 +-------+---------+--------+----+----+
 
 ```
+
+### c. Repeat the process using the reduced table
+
+```
++------------------------+---------+            +-----------------------+
+|          1ST REDUCTION           |            |      2ND REDUCTION    |
++------------+-----------+---------+            +------------+----------+
+|  minterm   |   binary  |  check  |            |  minterm   |  binary  |
++------------+-----------+---------+            +------------+----------+
+|    0, 1    |   00x     |  True   |            | 0, 1, 4, 5 |          |
+|    0, 4    |   x00     |  True   |            |            |    x0x   |
++------------------------+---------+            | 0, 4, 1, 5 |          |
+|    1, 3    |   0x1     |  False  |            +------------+----------+
+|    1, 5    |   x01     |  True   |
+|    4, 5    |   10x     |  True   |
+|    4, 6    |   1x0     |  False  |
++------------+-----------+---------+
+```
+
+### d.
+
+At this second reduction, we should note two things:
+
+1. Not all the minterm groups in the 1st reduction could form new bigger pairs ie. 0x1, 1x0
+2. In the 2nd reduction table only one term exist i.e x0x and we cannot reduce further.
+
+All these terms from 1 and 2, are our **prime implicants**
+
+Further, you can now proceed to determine the essential, and if any, non-essential
+prime implicants for our simplified expression.
+
+## How it works
+
+![alt text](image.png)
+
+Since QMC methods handles minterms and maxterms similary, it can there work for both terms. The interpretation of the
+prime implicants, which would be different for both scenarios, it left up to the user.
