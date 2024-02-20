@@ -65,7 +65,7 @@ this step requires a bit of explanation:
 
 We systematically check each binary equivalent with members in neigbour index group and **_tag & pair_** those that shift by only 1 value.
 
-
+```
 
 +-------+---------+--------+---------+      +------------------------+
 |               START                |      |     1ST REDUCTION      |
@@ -82,3 +82,4 @@ We systematically check each binary equivalent with members in neigbour index gr
 |       |  6      | 110    |    ✓    |      +------------+-----------+
 +-------+---------+--------+----+----+
 
+```
